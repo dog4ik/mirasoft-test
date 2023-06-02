@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import rootSaga from "./sagaApi/root";
+import postsReducer from "./slices/postsSlice";
 import createSagaMiddleware, { SagaMiddleware } from "redux-saga";
 
 const sagaMiddleware: SagaMiddleware = createSagaMiddleware();
 
 const store = configureStore({
+  reducer: { posts: postsReducer },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(sagaMiddleware),
 });

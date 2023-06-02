@@ -44,5 +44,5 @@ export const fakeApi = axios.create({
 });
 
 export default function* rootSaga() {
-  yield all([]);
+  yield all([watchFetchPosts()]);
 }
