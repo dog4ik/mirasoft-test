@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import { AxiosError } from "axios";
 import { FakeCommentType, fakeApi } from "./root";
 import {
@@ -31,7 +31,7 @@ function* fetchCommentsSaga(action: {
 }
 
 function* watchFetchComments() {
-  yield takeEvery(fetchCommentsStart, fetchCommentsSaga);
+  yield takeLatest(fetchCommentsStart, fetchCommentsSaga);
 }
 
 export default watchFetchComments;

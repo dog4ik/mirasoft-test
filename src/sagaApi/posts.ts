@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeLatest } from "redux-saga/effects";
 import axios, { AxiosError } from "axios";
 import {
   fetchPostsFailure,
@@ -43,7 +43,7 @@ function* fetchPostsSaga(): Generator<any, void, PostsType> {
 }
 
 function* watchFetchPosts() {
-  yield takeEvery(fetchPostsStart.type, fetchPostsSaga);
+  yield takeLatest(fetchPostsStart.type, fetchPostsSaga);
 }
 
 export type PostsType = UnwrapPromise<ReturnType<typeof fetchPosts>>;
