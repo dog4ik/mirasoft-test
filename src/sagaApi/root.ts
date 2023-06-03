@@ -2,6 +2,7 @@ import { all } from "redux-saga/effects";
 import watchFetchPosts from "./posts";
 import axios from "axios";
 import watchFetchUser from "./user";
+import watchFetchComments from "./comments";
 
 export type FakePostType = {
   userId: string;
@@ -47,5 +48,5 @@ export const fakeApi = axios.create({
 });
 
 export default function* rootSaga() {
-  yield all([watchFetchPosts(), watchFetchUser()]);
+  yield all([watchFetchPosts(), watchFetchUser(), watchFetchComments()]);
 }
