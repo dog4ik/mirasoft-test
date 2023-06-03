@@ -57,7 +57,10 @@ const postsSlice = createSlice({
           state.filteredPosts.sort(sortTitle).reverse();
           break;
         case "none":
-          state.filteredPosts = state.posts;
+          const ids = state.filteredPosts.map((item) => item.id);
+          state.filteredPosts = state.posts.filter((post) =>
+            ids.includes(post.id)
+          );
           break;
       }
     },
