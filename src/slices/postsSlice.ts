@@ -2,6 +2,21 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { PostsType } from "../sagaApi/posts";
 import { AxiosError } from "axios";
 
+type PostType = PostsType[number];
+
+function sortTitle(a: PostType, b: PostType) {
+  const titleA = a.title.toLowerCase();
+  const titleB = b.title.toLowerCase();
+
+  if (titleA < titleB) {
+    return -1;
+  }
+  if (titleA > titleB) {
+    return 1;
+  }
+  return 0;
+}
+
 const postsSlice = createSlice({
   name: "posts",
   initialState: {
@@ -36,10 +51,10 @@ const postsSlice = createSlice({
     sortPosts(state, action: PayloadAction<"asc" | "desc" | "none">) {
       switch (action.payload) {
         case "asc":
-          state.filteredPosts.sort();
+          state.filteredPosts.sort(sortTitle);
           break;
         case "desc":
-          state.filteredPosts.sort().reverse();
+          state.filteredPosts.sort(sortTitle).reverse();
           break;
         case "none":
           state.filteredPosts = state.posts;
