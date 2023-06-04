@@ -8,7 +8,6 @@ import {
 } from "../slices/userSlice";
 
 async function fetchUser(id: number) {
-  await new Promise((res) => setTimeout(res, 1000));
   const user = await fakeApi
     .get<FakeUserType>(`/users/${id}`)
     .then((res) => res.data);

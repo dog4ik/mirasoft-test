@@ -43,8 +43,21 @@ export type FakeUserType = {
   };
 };
 
+const BASE_URL = "https://jsonplaceholder.typicode.com";
+
 export const fakeApi = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com",
+  baseURL: BASE_URL,
+});
+export const fakeApiNoDelay = axios.create({
+  baseURL: BASE_URL,
+});
+
+fakeApi.interceptors.request.use((config) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(config);
+    }, 500);
+  });
 });
 
 export default function* rootSaga() {
