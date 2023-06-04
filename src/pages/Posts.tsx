@@ -1,7 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { useEffect, useState } from "react";
-import { fetchPostsStart, findPosts, sortPosts } from "../slices/postsSlice";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { findPosts, sortPosts } from "../slices/postsSlice";
 import { Stack } from "react-bootstrap";
 import Post from "../components/Post";
 import Pagination from "../components/Pagination";
@@ -10,6 +9,7 @@ import Loading from "../components/Loading";
 import Search from "../components/Search";
 import Sort from "../components/Sort";
 import { fetchCommentsStart } from "../slices/commentsSlice";
+import usePostsQuery from "../hooks/usePostsQuery";
 
 const PAGE_CAPACITY = 10;
 
@@ -17,20 +17,10 @@ const Posts = () => {
   const dispatch = useDispatch();
   const [search] = useSearchParams();
   const [commentsExpandedId, setCommentsExpandedId] = useState<number>();
-  const page = search.get("page");
-  const currentPage = page ? Math.max(1, +page) : 1;
-
+  const searchPage = search.get("page");
+  const currentPage = searchPage ? Math.max(1, +searchPage) : 1;
   const navigate = useNavigate();
-  const { filteredPosts, loading, error } = useSelector(
-    (state: RootState) => state.posts
-  );
-  const paginatedPosts = filteredPosts.filter(
-    (_, idx) =>
-      !(
-        idx + 1 <= currentPage * PAGE_CAPACITY - PAGE_CAPACITY ||
-        idx + 1 >= currentPage * PAGE_CAPACITY
-      )
-  );
+  const postsQuery = usePostsQuery();
 
   function handleSearch(query: string) {
     setCommentsExpandedId(undefined);
@@ -52,12 +42,16 @@ const Posts = () => {
     setCommentsExpandedId(id);
   }
 
-  useEffect(() => {
-    dispatch(fetchPostsStart());
-  }, [dispatch]);
+  if (postsQuery.isLoading) return <Loading />;
+  if (postsQuery.isError) return <div>Error</div>;
 
-  if (loading) return <Loading />;
-  if (error) return <div>Error</div>;
+  const paginatedPosts = postsQuery.filteredPosts.filter(
+    (_, idx) =>
+      !(
+        idx + 1 <= currentPage * PAGE_CAPACITY - PAGE_CAPACITY ||
+        idx + 1 >= currentPage * PAGE_CAPACITY
+      )
+  );
 
   return (
     <>
@@ -80,7 +74,7 @@ const Posts = () => {
         })}
         <Pagination
           currentPage={currentPage}
-          maxPages={Math.ceil(filteredPosts.length / PAGE_CAPACITY)}
+          maxPages={Math.ceil(postsQuery.filteredPosts.length / PAGE_CAPACITY)}
           onPageClick={(page) => navigate(`/?page=${page}`)}
         />
       </Stack>
