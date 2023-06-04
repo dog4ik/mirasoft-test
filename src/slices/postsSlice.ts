@@ -22,22 +22,25 @@ const postsSlice = createSlice({
   initialState: {
     posts: [] as PostsType,
     filteredPosts: [] as PostsType,
-    loading: true,
+    isLoading: true,
+    isError: false,
     error: undefined as AxiosError | undefined,
   },
   reducers: {
     fetchPostsStart(state) {
-      state.loading = true;
+      state.isLoading = true;
       state.error = undefined;
+      state.isError = false;
     },
     fetchPostsSuccess(state, action: PayloadAction<PostsType>) {
-      state.loading = false;
+      state.isLoading = false;
       state.posts = action.payload;
       state.filteredPosts = action.payload;
     },
     fetchPostsFailure(state, action: PayloadAction<AxiosError>) {
-      state.loading = false;
+      state.isLoading = false;
       state.error = action.payload;
+      state.isError = false;
     },
     findPosts(state, action: PayloadAction<string>) {
       state.filteredPosts =

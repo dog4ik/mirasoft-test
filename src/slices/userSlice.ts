@@ -6,21 +6,24 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     user: {} as UserType,
-    loading: true,
+    isLoading: true,
     error: undefined as AxiosError | undefined,
+    isError: false,
   },
   reducers: {
     fetchUserStart(state, _: PayloadAction<number>) {
-      state.loading = true;
+      state.isLoading = true;
       state.error = undefined;
+      state.isError = false;
     },
     fetchUserSuccess(state, action: PayloadAction<UserType>) {
-      state.loading = false;
+      state.isLoading = false;
       state.user = action.payload;
     },
     fetchUserFailure(state, action: PayloadAction<AxiosError>) {
-      state.loading = false;
+      state.isLoading = false;
       state.error = action.payload;
+      state.isError = true;
     },
   },
 });

@@ -6,21 +6,24 @@ const commentsSlice = createSlice({
   name: "comments",
   initialState: {
     comments: [] as FakeCommentType[],
-    loading: false,
+    isLoading: false,
+    isError: false,
     error: undefined as AxiosError | undefined,
   },
   reducers: {
     fetchCommentsStart(state, _: PayloadAction<number>) {
-      state.loading = true;
+      state.isLoading = true;
       state.error = undefined;
+      state.isError = false;
     },
     fetchCommentsSuccess(state, action: PayloadAction<FakeCommentType[]>) {
-      state.loading = false;
+      state.isLoading = false;
       state.comments = action.payload;
     },
     fetchCommentsFailure(state, action: PayloadAction<AxiosError>) {
-      state.loading = false;
+      state.isLoading = false;
       state.error = action.payload;
+      state.isError = true;
     },
   },
 });
