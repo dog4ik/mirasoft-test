@@ -6,7 +6,11 @@ const Header = () => {
   return (
     <Navbar bg="light" sticky="top" expand="">
       <Container fluid>
-        <Navbar.Brand>Brand</Navbar.Brand>
+        <Navbar.Brand>
+          <Link className="nav-link" to={"/"}>
+            Brand
+          </Link>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="offcanvasNavbar-expand-sm" />
         <Navbar.Offcanvas
           id="offcanvasNavbar-expand-sm"
