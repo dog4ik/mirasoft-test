@@ -1,0 +1,12 @@
+.animate-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 500ms;
+}
+.animate-grid > * {
+  overflow: hidden;
+}
+
+.animate-grid-active {
+  grid-template-rows: 1fr;
+}
