@@ -8,8 +8,6 @@ import {
 } from "../slices/commentsSlice";
 
 async function fetchComments(id: number) {
-  console.log("fetching comments");
-
   await new Promise((res) => setTimeout(res, 1000));
   const comments = await fakeApi.get<FakeCommentType[]>(
     `/posts/${id}/comments`
