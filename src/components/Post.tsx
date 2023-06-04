@@ -4,6 +4,8 @@ import Comment from "./Comment";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { useEffect, useRef, useState } from "react";
+import { FakeCommentType } from "../sagaApi/root";
+import ErrorComponent from "./ErrorComponent";
 
 type PostProps = {
   body: string;
@@ -15,6 +17,31 @@ type PostProps = {
   areCommentsExpanded: boolean;
 };
 
+type CommentsSectionProps = {
+  comments: FakeCommentType[];
+  commentsExpanded: boolean;
+  commentsLoading: boolean;
+  commentsError: boolean;
+};
+
+const CommentsSection = ({
+  comments,
+  commentsError,
+  commentsLoading,
+  commentsExpanded,
+}: CommentsSectionProps) => {
+  if (commentsError) return <ErrorComponent />;
+  if (commentsExpanded && !commentsLoading)
+    return (
+      <div>
+        {comments.map((comment) => (
+          <Comment key={comment.id} body={comment.body} email={comment.email} />
+        ))}
+      </div>
+    );
+  return null;
+};
+
 const Post = ({
   onCommentsExpand,
   areCommentsExpanded,
@@ -24,24 +51,24 @@ const Post = ({
   postId,
   nickname,
 }: PostProps) => {
-  const { comments, loading } = useSelector(
-    (state: RootState) => state.comments
-  );
+  const {
+    comments,
+    isLoading: commentsLoading,
+    isError,
+  } = useSelector((state: RootState) => state.comments);
   const [localOpen, setLocalOpen] = useState(areCommentsExpanded);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  function toggleComments() {
-    if (!loading) onCommentsExpand(postId);
-  }
   function handleToggle() {
-    if (!areCommentsExpanded) {
-      setLocalOpen(true);
-      clearTimeout(timeoutRef.current);
-      toggleComments();
-    } else {
+    if (commentsLoading) return;
+    if (areCommentsExpanded) {
       setLocalOpen(false);
       timeoutRef.current = setTimeout(() => {
-        toggleComments();
+        onCommentsExpand(postId);
       }, 500);
+    } else {
+      setLocalOpen(true);
+      clearTimeout(timeoutRef.current);
+      onCommentsExpand(postId);
     }
   }
   useEffect(() => {
@@ -81,27 +108,22 @@ const Post = ({
         }}
       >
         {localOpen
-          ? loading
+          ? commentsLoading
             ? "Loading..."
             : "Hide comments"
           : "Show comments"}
       </button>
       <div
         className={`animate-grid ${
-          localOpen && !loading ? "animate-grid-active" : ""
+          localOpen && !commentsLoading ? "animate-grid-active" : ""
         }`}
       >
-        <div>
-          {areCommentsExpanded &&
-            !loading &&
-            comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                body={comment.body}
-                email={comment.email}
-              />
-            ))}
-        </div>
+        <CommentsSection
+          comments={comments}
+          commentsExpanded={areCommentsExpanded}
+          commentsLoading={commentsLoading}
+          commentsError={isError}
+        />
       </div>
     </Card>
   );
