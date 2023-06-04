@@ -1,6 +1,6 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { AxiosError } from "axios";
-import { FakeUserType, fakeApi } from "./root";
+import { FakePostType, FakeUserType, fakeApi } from "./root";
 import {
   fetchUserFailure,
   fetchUserStart,
@@ -9,15 +9,20 @@ import {
 
 async function fetchUser(id: number) {
   await new Promise((res) => setTimeout(res, 1000));
-  const user = await fakeApi.get<FakeUserType>(`/users/${id}`);
-  return user.data;
+  const user = await fakeApi
+    .get<FakeUserType>(`/users/${id}`)
+    .then((res) => res.data);
+  const userPosts = await fakeApi
+    .get<FakePostType[]>(`/users/${user.id}/posts`)
+    .then((res) => res.data);
+  return { ...user, posts: userPosts };
 }
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 
 function* fetchUsersSaga(action: {
   payload: number;
-}): Generator<any, void, FakeUserType> {
+}): Generator<any, void, UserType> {
   try {
     const response = yield call(fetchUser, action.payload);
     yield put(fetchUserSuccess(response));
@@ -28,7 +33,7 @@ function* fetchUsersSaga(action: {
 }
 
 function* watchFetchUser() {
-  yield takeEvery(fetchUserStart, fetchUsersSaga);
+  yield takeLatest(fetchUserStart, fetchUsersSaga);
 }
 
 export type UserType = UnwrapPromise<ReturnType<typeof fetchUser>>;
