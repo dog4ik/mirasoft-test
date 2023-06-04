@@ -51,7 +51,7 @@ const Posts = () => {
     (_, idx) =>
       !(
         idx + 1 <= currentPage * PAGE_CAPACITY - PAGE_CAPACITY ||
-        idx + 1 >= currentPage * PAGE_CAPACITY
+        idx + 1 > currentPage * PAGE_CAPACITY
       )
   );
 
