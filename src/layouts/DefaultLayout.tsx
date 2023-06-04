@@ -2,11 +2,11 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 const DefaultLayout = () => {
   return (
-    <div className="flex h-screen flex-1">
+    <div className="100vh">
       <Header />
-      <div className="h-full w-2/3 flex-1">
+      <main className="pt-3" style={{ height: "calc(100vh - 56px)" }}>
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };
