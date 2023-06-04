@@ -6,6 +6,7 @@ import { Card, Col, Container, Row } from "react-bootstrap";
 import Post from "../components/Post";
 import { fetchCommentsStart } from "../slices/commentsSlice";
 import useUserQuery from "../hooks/useUserQuery";
+import ErrorComponent from "../components/ErrorComponent";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,8 @@ const Profile = () => {
   const userQuery = useUserQuery(userId);
 
   if (userQuery.isLoading) return <Loading />;
+  if (userQuery.isError)
+    return <ErrorComponent code={userQuery.error?.response?.status} />;
   const { email, username, name, phone, address, posts } = userQuery.user;
 
   return (

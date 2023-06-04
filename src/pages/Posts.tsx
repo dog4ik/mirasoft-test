@@ -10,6 +10,7 @@ import Search from "../components/Search";
 import Sort from "../components/Sort";
 import { fetchCommentsStart } from "../slices/commentsSlice";
 import usePostsQuery from "../hooks/usePostsQuery";
+import ErrorComponent from "../components/ErrorComponent";
 
 const PAGE_CAPACITY = 10;
 
@@ -43,7 +44,8 @@ const Posts = () => {
   }
 
   if (postsQuery.isLoading) return <Loading />;
-  if (postsQuery.isError) return <div>Error</div>;
+  if (postsQuery.isError)
+    return <ErrorComponent code={postsQuery.error?.response?.status} />;
 
   const paginatedPosts = postsQuery.filteredPosts.filter(
     (_, idx) =>
