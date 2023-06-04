@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
-import { fetchUserStart } from "../slices/userSlice";
-import { RootState } from "../store";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import Post from "../components/Post";
 import { fetchCommentsStart } from "../slices/commentsSlice";
+import useUserQuery from "../hooks/useUserQuery";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -27,16 +26,10 @@ const Profile = () => {
     dispatch(fetchCommentsStart(id));
   }
 
-  const { user, loading, error } = useSelector(
-    (state: RootState) => state.user
-  );
+  const userQuery = useUserQuery(userId);
 
-  useEffect(() => {
-    dispatch(fetchUserStart(userId));
-  }, [dispatch]);
-
-  if (loading) return <Loading />;
-  const { email, username, name, phone, address, posts } = user;
+  if (userQuery.isLoading) return <Loading />;
+  const { email, username, name, phone, address, posts } = userQuery.user;
 
   return (
     <section className="h-100 col-lg-9 mx-auto">
@@ -107,7 +100,7 @@ const Profile = () => {
               title={post.title}
               key={post.id}
               postId={post.id}
-              nickname={user.username}
+              nickname={username}
               userId={post.userId}
               areCommentsExpanded={expandedPost === post.id}
               onCommentsExpand={handleExpand}
