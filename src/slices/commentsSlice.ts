@@ -6,7 +6,7 @@ const commentsSlice = createSlice({
   name: "comments",
   initialState: {
     comments: [] as FakeCommentType[],
-    loading: true,
+    loading: false,
     error: undefined as AxiosError | undefined,
   },
   reducers: {
