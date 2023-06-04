@@ -1,12 +1,12 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import DefaultLayout from "./layouts/DefaultLayout";
 import { Provider } from "react-redux";
-import NotFound from "./pages/NotFound";
 import Posts from "./pages/Posts";
 import AboutMe from "./pages/AboutMe";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Profile from "./pages/Profile";
 import store from "./store";
+import ErrorComponent from "./components/ErrorComponent";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,6 +29,7 @@ function App() {
           },
           element: <Profile />,
         },
+        { path: "*", element: <ErrorComponent code={404} /> },
       ],
     },
   ]);
