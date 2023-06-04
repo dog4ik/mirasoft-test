@@ -35,7 +35,7 @@ const Profile = () => {
     <section className="h-100 col-lg-9 mx-auto">
       <Container className="h-100">
         <Row className="d-flex justify-content-center align-items-center h-100">
-          <Link to={"/"} className="fs-4 nav-link">
+          <Link to={"/"} className="fs-4 my-4 nav-link">
             Back
           </Link>
           <Col className="col-lg-9 mb-4 mb-lg-0">
@@ -94,6 +94,9 @@ const Profile = () => {
             </Card>
           </Col>
 
+          <div className="text-center my-4">
+            <span className="fs-4">User posts:</span>
+          </div>
           {posts.map((post) => (
             <Post
               body={post.body}
