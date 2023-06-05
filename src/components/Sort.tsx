@@ -5,7 +5,7 @@ type SortProps = {
 };
 
 const Sort = ({ onSort }: SortProps) => {
-  const dirs = ["asc", "desc", "none"] as const;
+  const dirs = ["none", "asc", "desc"] as const;
   const [curIdx, setCurIdx] = useState(0);
   return (
     <button
