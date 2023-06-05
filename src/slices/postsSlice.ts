@@ -62,7 +62,7 @@ const postsSlice = createSlice({
     fetchPostsFailure(state, action: PayloadAction<AxiosError>) {
       state.isLoading = false;
       state.error = action.payload;
-      state.isError = false;
+      state.isError = true;
     },
     findPosts(state, action: PayloadAction<string>) {
       state.filteredPosts =
