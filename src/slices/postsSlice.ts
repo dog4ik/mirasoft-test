@@ -51,11 +51,14 @@ const postsSlice = createSlice({
   reducers: {
     fetchPostsStart(state) {
       state.isLoading = true;
+      state.posts = undefined;
       state.error = undefined;
       state.isError = false;
     },
     fetchPostsSuccess(state, action: PayloadAction<PostsType>) {
       state.isLoading = false;
+      state.error = undefined;
+      state.isError = false;
       state.posts = action.payload;
       state.filteredPosts = action.payload;
     },
@@ -65,29 +68,31 @@ const postsSlice = createSlice({
       state.isError = true;
     },
     findPosts(state, action: PayloadAction<string>) {
-      state.filteredPosts =
-        state.posts.filter((post) =>
-          post.title
-            .trim()
-            .toLowerCase()
-            .includes(action.payload.trim().toLowerCase())
-        ) ?? [];
+      if (state.posts !== undefined)
+        state.filteredPosts =
+          state.posts.filter((post) =>
+            post.title
+              .trim()
+              .toLowerCase()
+              .includes(action.payload.trim().toLowerCase())
+          ) ?? [];
     },
     sortPosts(state, action: PayloadAction<"asc" | "desc" | "none">) {
-      switch (action.payload) {
-        case "asc":
-          state.filteredPosts.sort(sortTitle);
-          break;
-        case "desc":
-          state.filteredPosts.sort(sortTitle).reverse();
-          break;
-        case "none":
-          const ids = state.filteredPosts.map((item) => item.id);
-          state.filteredPosts = state.posts.filter((post) =>
-            ids.includes(post.id)
-          );
-          break;
-      }
+      if (state.posts !== undefined)
+        switch (action.payload) {
+          case "asc":
+            state.filteredPosts.sort(sortTitle);
+            break;
+          case "desc":
+            state.filteredPosts.sort(sortTitle).reverse();
+            break;
+          case "none":
+            const ids = state.filteredPosts.map((item) => item.id);
+            state.filteredPosts = state.posts.filter((post) =>
+              ids.includes(post.id)
+            );
+            break;
+        }
     },
   },
 });
