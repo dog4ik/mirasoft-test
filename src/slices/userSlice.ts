@@ -2,14 +2,34 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UserType } from "../sagaApi/user";
 import { AxiosError } from "axios";
 
+type userStateType =
+  | {
+      user: UserType;
+      isLoading: false;
+      isError: false;
+      error: undefined;
+    }
+  | {
+      user: undefined;
+      isLoading: true;
+      isError: false;
+      error: undefined;
+    }
+  | {
+      user: undefined;
+      isLoading: false;
+      isError: true;
+      error: AxiosError;
+    };
+
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    user: {} as UserType,
+    user: undefined,
     isLoading: true,
-    error: undefined as AxiosError | undefined,
+    error: undefined,
     isError: false,
-  },
+  } as userStateType,
   reducers: {
     fetchUserStart(state, _: PayloadAction<number>) {
       state.isLoading = true;

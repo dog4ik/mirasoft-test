@@ -18,7 +18,7 @@ type PostProps = {
 };
 
 type CommentsSectionProps = {
-  comments: FakeCommentType[];
+  comments?: FakeCommentType[];
   commentsExpanded: boolean;
   commentsLoading: boolean;
   commentsError: boolean;
@@ -31,7 +31,8 @@ const CommentsSection = ({
   commentsExpanded,
 }: CommentsSectionProps) => {
   if (commentsError) return <ErrorComponent />;
-  if (commentsExpanded && !commentsLoading)
+  if (commentsLoading) return;
+  if (commentsExpanded && comments)
     return (
       <div>
         {comments.map((comment) => (

@@ -3,6 +3,28 @@ import { PostsType } from "../sagaApi/posts";
 import { AxiosError } from "axios";
 
 type PostType = PostsType[number];
+type postsStateType =
+  | {
+      posts: PostsType;
+      filteredPosts: PostsType;
+      isLoading: false;
+      isError: false;
+      error: undefined;
+    }
+  | {
+      posts: undefined;
+      filteredPosts: undefined;
+      isLoading: true;
+      isError: false;
+      error: undefined;
+    }
+  | {
+      posts: undefined;
+      filteredPosts: undefined;
+      isLoading: false;
+      isError: true;
+      error: AxiosError;
+    };
 
 function sortTitle(a: PostType, b: PostType) {
   const titleA = a.title.toLowerCase();
@@ -20,12 +42,12 @@ function sortTitle(a: PostType, b: PostType) {
 const postsSlice = createSlice({
   name: "posts",
   initialState: {
-    posts: [] as PostsType,
-    filteredPosts: [] as PostsType,
+    posts: undefined,
+    filteredPosts: undefined,
     isLoading: true,
     isError: false,
-    error: undefined as AxiosError | undefined,
-  },
+    error: undefined,
+  } as postsStateType,
   reducers: {
     fetchPostsStart(state) {
       state.isLoading = true;

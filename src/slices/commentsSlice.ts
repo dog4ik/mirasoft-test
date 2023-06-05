@@ -2,17 +2,43 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { FakeCommentType } from "../sagaApi/root";
 
+type commentsStateType =
+  | {
+      comments: FakeCommentType[];
+      isLoading: false;
+      isError: false;
+      error: undefined;
+    }
+  | {
+      comments: undefined;
+      isLoading: true;
+      isError: false;
+      error: undefined;
+    }
+  | {
+      comments: undefined;
+      isLoading: false;
+      isError: false;
+      error: undefined;
+    }
+  | {
+      comments: undefined;
+      isLoading: false;
+      isError: true;
+      error: AxiosError;
+    };
 const commentsSlice = createSlice({
   name: "comments",
   initialState: {
-    comments: [] as FakeCommentType[],
+    comments: undefined,
     isLoading: false,
     isError: false,
-    error: undefined as AxiosError | undefined,
-  },
+    error: undefined,
+  } as commentsStateType,
   reducers: {
     fetchCommentsStart(state, _: PayloadAction<number>) {
       state.isLoading = true;
+      state.comments = undefined;
       state.error = undefined;
       state.isError = false;
     },
